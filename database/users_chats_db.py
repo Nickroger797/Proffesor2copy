@@ -13,6 +13,22 @@ import datetime
 my_client = MongoClient(OTHER_DB_URI)
 mydb = my_client["referal_user"]
 
+async def add_name(user_id, filename):
+    user_db = mydb[str(user_id)]
+    user = {'_id': filename}
+    existing_user = user_db.find_one({'_id': filename})
+    if existing_user is not None:
+        return False
+    try:
+        user_db.insert_one(user)
+        return True
+    except DuplicateKeyError:
+        return False
+      
+async def delete_all_msg(user_id):
+    user_db = mydb[str(user_id)]
+    user_db.delete_many({})
+
 async def referal_add_user(user_id, ref_user_id):
     user_db = mydb[str(user_id)]
     user = {'_id': ref_user_id}
