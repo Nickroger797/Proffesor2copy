@@ -279,6 +279,16 @@ class Database:
         })
         return count
 
+    async def get_bot_setting(self, bot_id, setting_key, default_value):
+        bot = await self.botcol.find_one({'id': int(bot_id)}, {setting_key: 1, '_id': 0})
+        return bot[setting_key] if bot and setting_key in bot else default_value
+    async def update_bot_setting(self, bot_id, setting_key, value):
+        await self.botcol.update_one(
+            {'id': int(bot_id)}, 
+            {'$set': {setting_key: value}}, 
+            upsert=True
+        )
+
     async def set_thumbnail(self, id, file_id):
         await self.col.update_one({'id': int(id)}, {'$set': {'file_id': file_id}})
 
