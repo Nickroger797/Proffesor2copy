@@ -8,6 +8,7 @@ from pyrogram.file_id import FileId
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 from .Imdbposter import get_movie_details, fetch_image
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from info import FILE_DB_URI, SEC_FILE_DB_URI, DATABASE_NAME, COLLECTION_NAME, MULTIPLE_DATABASE, USE_CAPTION_FILTER, MAX_B_TN, MOVIE_UPDATE_CHANNEL, OWNERID
 
 # First Database For File Saving 
@@ -189,12 +190,20 @@ def unpack_new_file_id(new_file_id):
 
 async def send_msg(bot, filename, caption): 
     try:
-        filename = re.sub(r'\(\@\S+\)|\[\@\S+\]|\b@\S+|\bwww\.\S+', '', filename).strip()
-        caption = re.sub(r'\(\@\S+\)|\[\@\S+\]|\b@\S+|\bwww\.\S+', '', caption).strip()
+        # Debugging logs
+        print(f"📩 Sending message to channel: {MOVIE_UPDATE_CHANNEL}")
+        print(f"📌 Filename: {filename}")
+        print(f"📌 Caption: {caption}")
+
+        # Remove unwanted tags like @username, links, etc.
+        filename = re.sub(r'\@\S+|\@\S+|\b@\S+|\bwww\.\S+', '', filename).strip()
+        caption = re.sub(r'\@\S+|\@\S+|\b@\S+|\bwww\.\S+', '', caption).strip()
         
+        # Extract year from caption
         year_match = re.search(r"\b(19|20)\d{2}\b", caption)
         year = year_match.group(0) if year_match else None
 
+        # Extract season info
         pattern = r"(?i)(?:s|season)0*(\d{1,2})"
         season = re.search(pattern, caption) or re.search(pattern, filename)
         season = season.group(1) if season else None 
@@ -204,9 +213,11 @@ async def send_msg(bot, filename, caption):
         elif season and season in filename:
             filename = filename[: filename.find(season) + 1]
 
+        # Determine quality
         qualities = ["ORG", "org", "hdcam", "HDCAM", "HQ", "hq", "HDRip", "hdrip", "camrip", "CAMRip", "hdtc", "predvd", "DVDscr", "dvdscr", "dvdrip", "dvdscr", "HDTC", "dvdscreen", "HDTS", "hdts"]
         quality = await get_qualities(caption.lower(), qualities) or "HDRip"
 
+        # Determine language
         language = ""
         possible_languages = CAPTION_LANGUAGES
         for lang in possible_languages:
@@ -214,11 +225,19 @@ async def send_msg(bot, filename, caption):
                 language += f"{lang}, "
         language = language[:-2] if language else "Not idea 😄"
 
-        filename = re.sub(r"[\(\)\[\]\{\}:;'\-!]", "", filename)
+        # Clean filename
+        filename = re.sub(r"[\{\}:;'\-!]", "", filename)
 
-        text = "#𝑵𝒆𝒘_𝑭𝒊𝒍𝒆_𝑨𝒅𝒅𝒆𝒅 ✅\n\n👷𝑵𝒂𝒎𝒆: `{}`\n\n🌳𝑸𝒖𝒂𝒍𝒊𝒕𝒚: {}\n\n🍁𝑨𝒖𝒅𝒊𝒐: {}"
-        text = text.format(filename, quality, language)
+        # Final message text
+        text = f"""#𝑵𝒆𝒘_𝑭𝒊𝒍𝒆_𝑨𝒅𝒅𝒆𝒅 ✅
 
+👷 𝑵𝒂𝒎𝒆: `{filename}`
+
+🌳 𝑸𝒖𝒂𝒍𝒊𝒕𝒚: {quality}
+
+🍁 𝑨𝒖𝒅𝒊𝒐: {language}"""
+
+        # Check if already added
         if await add_name(OWNERID, filename):
             imdb = await get_movie_details(filename)  
             resized_poster = None
@@ -231,13 +250,16 @@ async def send_msg(bot, filename, caption):
             filenames = filename.replace(" ", '-')
             btn = [[InlineKeyboardButton('🌲 Get Files 🌲', url=f"https://telegram.me/{temp.U_NAME}?start=getfile-{filenames}")]]
             
+            # Send message to Movie Update Channel
             if resized_poster:
                 await bot.send_photo(chat_id=MOVIE_UPDATE_CHANNEL, photo=resized_poster, caption=text, reply_markup=InlineKeyboardMarkup(btn))
             else:              
                 await bot.send_message(chat_id=MOVIE_UPDATE_CHANNEL, text=text, reply_markup=InlineKeyboardMarkup(btn))
 
-    except:
-        pass
+        print("✅ Successfully sent movie update message!")
+
+    except Exception as e:
+        print(f"❌ Error in send_msg: {e}")
 
 async def get_qualities(text, qualities: list):
     """Get all Quality from text"""
