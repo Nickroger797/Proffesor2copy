@@ -99,7 +99,7 @@ GRP_LNK = environ.get('GRP_LNK', 'https://t.me/codexmoviesgroup')
 CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/codexbotmaker')
 SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'codexdisscus') # Support Chat Link Without https:// or @
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/Codexownerr')
-OWNERID = int(os.environ.get('OWNERID', '6497757690'))
+OWNERID = int(os.environ.get('OWNERID', '5860228893'))
 
 # True Or False
 AI_SPELL_CHECK = bool(environ.get('AI_SPELL_CHECK', True))
