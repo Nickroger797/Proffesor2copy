@@ -1376,6 +1376,16 @@ async def set_movie_update_notification(client, message):
     except Exception as e:
         await log_error(client, f"Error in set_movie_update_notification: {e}")
         await message.reply_text(f"<b>❗ An error occurred: {e}</b>")
+
+async def log_error(client, error_message):
+    """Logs errors to the specified LOG_CHANNEL."""
+    try:
+        await client.send_message(
+            chat_id=LOG_CHANNEL, 
+            text=f"<b>⚠️ Error Log:</b>\n<code>{error_message}</code>"
+        )
+    except Exception as e:
+        print(f"Failed to log error: {e}")
         
 @Client.on_message(filters.command("plan"))
 async def plans_cmd_handler(client, message): 
