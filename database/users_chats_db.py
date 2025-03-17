@@ -66,6 +66,7 @@ class Database:
         self.grp = self.db.groups
         self.users = self.db.uersz
         self.bot = self.db.clone_bots
+        self.botcol = self.db["deendayal"]
 
 
     def new_user(self, id, name):
