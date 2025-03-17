@@ -306,6 +306,13 @@ class Database:
     async def get_save(self, id):
         user = await self.col.find_one({'id': int(id)})
         return user.get('save', False) 
+
+    async def movie_update_status(self, bot_id):
+        return await self.get_bot_setting(bot_id, 'MOVIE_UPDATE_NOTIFICATION', MOVIE_UPDATE_NOTIFICATION)
+
+    async def update_movie_update_status(self, bot_id, enable):
+        await self.update_bot_setting(bot_id, 'MOVIE_UPDATE_NOTIFICATION', enable)
+        
     
 
 db = Database(USER_DB_URI, DATABASE_NAME)
