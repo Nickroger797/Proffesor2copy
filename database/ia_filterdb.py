@@ -22,7 +22,7 @@ sec_client = MongoClient(SEC_FILE_DB_URI)
 sec_db = sec_client[DATABASE_NAME]
 sec_col = sec_db[COLLECTION_NAME]
 
-async def save_file(media):
+async def save_file(bot, media):
     """Save file in the database."""
     
     file_id = unpack_new_file_id(media.file_id)
