@@ -8,6 +8,7 @@ from pyrogram.file_id import FileId
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 from .Imdbposter import get_movie_details, fetch_image
+from utils import get_settings, save_group_settings, temp, get_status
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from info import FILE_DB_URI, SEC_FILE_DB_URI, DATABASE_NAME, COLLECTION_NAME, MULTIPLE_DATABASE, USE_CAPTION_FILTER, MAX_B_TN, MOVIE_UPDATE_CHANNEL, OWNERID
 
