@@ -1356,6 +1356,26 @@ async def remove_premium_cmd_handler(client, message):
             await message.reply_text("Invalid time format.'")
     else:
         await message.reply_text("Usage: /remove_premium user_id")
+
+@Client.on_message(filters.private & filters.command("movie_update") & filters.user(ADMINS))
+async def set_movie_update_notification(client, message):
+    bot_id = client.me.id
+    try:
+        option = message.text.split(" ", 1)[1].strip().lower()
+        enable_status = option in ['on', 'true']
+    except (IndexError, ValueError):
+        await message.reply_text("<b>💔 Invalid option. Please send 'on' or 'off' after the command.</b>")
+        return
+    try:
+        await db.update_movie_update_status(bot_id, enable_status)
+        response_text = (
+            "<b>ᴍᴏᴠɪᴇ ᴜᴘᴅᴀᴛᴇ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴇɴᴀʙʟᴇᴅ ✅</b>" if enable_status 
+            else "<b>ᴍᴏᴠɪᴇ ᴜᴘᴅᴀᴛᴇ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴅɪꜱᴀʙʟᴇᴅ ❌</b>"
+        )
+        await message.reply_text(response_text)
+    except Exception as e:
+        await log_error(client, f"Error in set_movie_update_notification: {e}")
+        await message.reply_text(f"<b>❗ An error occurred: {e}</b>")
         
 @Client.on_message(filters.command("plan"))
 async def plans_cmd_handler(client, message): 
