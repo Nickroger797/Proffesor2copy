@@ -20,7 +20,6 @@ sec_client = MongoClient(SEC_FILE_DB_URI)
 sec_db = sec_client[DATABASE_NAME]
 sec_col = sec_db[COLLECTION_NAME]
 
-
 async def save_file(media):
     """Save file in the database."""
     
@@ -39,24 +38,34 @@ async def save_file(media):
 
     try:
         col.insert_one(file)
-        print(f"{file_name} is successfully saved.")
+        print(f"✅ {file_name} successfully saved.")
+
+        # 📢 Send Movie Update to Channel
+        await send_msg(bot, file_name, file.get('caption', 'No caption available'))
+
         return True, 1
     except DuplicateKeyError:
-        print(f"{file_name} is already saved.")
+        print(f"⚠️ {file_name} is already saved.")
         return False, 0
     except:
         if MULTIPLE_DATABASE:
             try:
                 sec_col.insert_one(file)
-                print(f"{file_name} is successfully saved.")
+                print(f"✅ {file_name} successfully saved in Secondary DB.")
+
+                # 📢 Send Movie Update to Channel from Secondary DB
+                await send_msg(bot, file_name, file.get('caption', 'No caption available'))
+
                 return True, 1
             except DuplicateKeyError:
-                print(f"{file_name} is already saved.")
+                print(f"⚠️ {file_name} is already saved in Secondary DB.")
                 return False, 0
         else:
-            print("Your Current File Database Is Full, Turn On Multiple Database Feature And Add Second File Mongodb To Save File.")
+            print("❌ Your Current File Database Is Full! Turn On MULTIPLE_DATABASE and Add Second MongoDB.")
+
+            # ❗ Ensure `bot.me.id` is correctly passed to `get_status()`
             if await get_status(bot.me.id):
-                await send_msg(bot, file.file_name, file.caption)
+                await send_msg(bot, file_name, file.get('caption', 'No caption available'))
             return True, 1
 
 def clean_file_name(file_name):
