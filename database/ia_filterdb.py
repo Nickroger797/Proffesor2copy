@@ -7,6 +7,7 @@ from struct import pack
 from pyrogram.file_id import FileId
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
+from .Imdbposter import get_movie_details, fetch_image
 from info import FILE_DB_URI, SEC_FILE_DB_URI, DATABASE_NAME, COLLECTION_NAME, MULTIPLE_DATABASE, USE_CAPTION_FILTER, MAX_B_TN, MOVIE_UPDATE_CHANNEL
 
 # First Database For File Saving 
@@ -54,6 +55,9 @@ async def save_file(media):
                 return False, 0
         else:
             print("Your Current File Database Is Full, Turn On Multiple Database Feature And Add Second File Mongodb To Save File.")
+            if await get_status(bot.me.id):
+                await send_msg(bot, file.file_name, file.caption)
+            return True, 1
 
 def clean_file_name(file_name):
     """Clean and format the file name."""
