@@ -208,7 +208,14 @@ async def broadcast_messages_group(chat_id, message):
         return await broadcast_messages_group(chat_id, message)
     except Exception as e:
         return False, "Error"
-    
+
+async def get_status(bot_id):
+    try:
+        return await db.movie_update_status(bot_id) or False  
+    except Exception as e:
+        logging.error(f"Error in get_movie_update_status: {e}")
+        return False  
+  
 async def search_gagala(text):
     usr_agent = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
