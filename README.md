@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://i.imgur.com/LuExN38.jpeg" alt="Codex bot">
+  <img src="https://i.imgur.com/jNUyYf9.jpeg" alt="Codex bot">
 </p>
 <h1 align="center">
-  VJ FILTER BOT
+  CODEX BOT
 </h1>
 
-![Typing SVG](https://readme-typing-svg.herokuapp.com/?lines=Welcome+To+VJ+Filter+Bot!)
+![Typing SVG](https://readme-typing-svg.herokuapp.com/?lines=Welcome+To+Codex+Filter+Bot!)
 </p>
 
 ## Main Feature 
@@ -35,9 +35,7 @@
 
 - Note : You Can Turn On Or Off Every Feature, Just Use Which Feature You Want By Turning It On.
 
-Join My <a href='https://telegram.dog/vj_botz'>Update Channel</a> For More Update Regarding Repo.</b>
-
-### How To Deploy : [Video Tutorial](https://youtu.be/3SJR7vH2kRo)
+Join My <a href='https://t.me/codexbotmaker'>Update Channel</a> For More Update Regarding bots.</b>
 
 ## Commands
 ```
