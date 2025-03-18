@@ -24,6 +24,32 @@ async def add_name(user_id, filename):
         return True
     except DuplicateKeyError:
         return False
+
+from motor.motor_asyncio import AsyncIOMotorClient
+
+client = AsyncIOMotorClient(DATABASE_URI)
+db = client[DATABASE_NAME]
+missing_requests_col = db["missing_requests"]
+
+import datetime
+
+async def add_missing_request(user_id, request_text):
+    """Missing request को database में add करता है"""
+    request_data = {
+        "user_id": user_id,
+        "request_text": request_text,
+        "timestamp": datetime.datetime.utcnow()
+    }
+    await missing_requests_col.insert_one(request_data)
+
+async def get_all_missing_requests():
+    """सभी missing requests लाने के लिए"""
+    requests = missing_requests_col.find({})
+    return [request async for request in requests]
+
+async def delete_missing_request(request_id):
+    """एक specific request delete करने के लिए"""
+    await missing_requests_col.delete_one({"_id": request_id})
       
 async def delete_all_msg(user_id):
     user_db = mydb[str(user_id)]
