@@ -27,7 +27,7 @@ async def add_name(user_id, filename):
 
 from motor.motor_asyncio import AsyncIOMotorClient
 
-client = AsyncIOMotorClient(DATABASE_URI)
+client = AsyncIOMotorClient(USER_DB_URI)
 db = client[DATABASE_NAME]
 missing_requests_col = db["missing_requests"]
 
