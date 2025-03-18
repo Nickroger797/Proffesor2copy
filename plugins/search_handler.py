@@ -1,7 +1,7 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
-MISSING_FILES_CHANNEL = -1001234567890  # Yahan apne channel ka ID dalna
+MISSING_FILES_CHANNEL = -1002316461830  # Yahan apne channel ka ID dalna
 
 @Client.on_message(filters.text & filters.group)
 async def search_file(client, message: Message):
