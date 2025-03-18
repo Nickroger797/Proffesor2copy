@@ -1,3 +1,5 @@
+from pyrogram import Client, filters
+
 @Client.on_message(filters.document | filters.video | filters.audio)
 async def auto_add_file(client, message: Message):
     file_name = message.document.file_name if message.document else (
