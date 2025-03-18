@@ -1,4 +1,5 @@
 from pyrogram import Client, filters
+from pyrogram.types import Message
 
 @Client.on_message(filters.document | filters.video | filters.audio)
 async def auto_add_file(client, message: Message):
